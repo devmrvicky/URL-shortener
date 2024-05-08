@@ -13,7 +13,15 @@ const createShortURL = async (req, res) => {
       redirectURL,
       clickHistory: [],
     });
-    res.status(201).json({ message: "url short successfully", urlDoc });
+    res
+      .status(201)
+      .json(
+        new ApiResponse({
+          status: 201,
+          message: "url short successfully",
+          data: urlDoc,
+        })
+      );
   } catch (error) {
     console.log("unable to short url " + error.message);
   }
@@ -40,25 +48,27 @@ const getAllShortUrlIds = async (req, res) => {
 
 const deleteShortURLId = async (req, res) => {
   try {
-    const shortURLId = req.params.shortURLId
-    const response = await URLModel.deleteOne({shortURLId})
-    if(!response) {
+    const shortURLId = req.params.shortURLId;
+    const response = await URLModel.deleteOne({ shortURLId });
+    if (!response) {
       throw new ApiError({
         status: 400,
-        message: 'Cannot delete this document'
-      })
+        message: "Cannot delete this document",
+      });
     }
-    res.status(200).json(new ApiResponse({
-      status: 200,
-      message: "Document deleted successfully"
-    }))
+    res.status(200).json(
+      new ApiResponse({
+        status: 200,
+        message: "Document deleted successfully",
+      })
+    );
   } catch (error) {
     throw new ApiError({
       status: 500,
-      message: error.message
-    })
+      message: error.message,
+    });
   }
-}
+};
 
 const redirectToMainURL = async (req, res) => {
   try {
@@ -79,4 +89,9 @@ const redirectToMainURL = async (req, res) => {
   }
 };
 
-export { createShortURL, getAllShortUrlIds, deleteShortURLId, redirectToMainURL };
+export {
+  createShortURL,
+  getAllShortUrlIds,
+  deleteShortURLId,
+  redirectToMainURL,
+};

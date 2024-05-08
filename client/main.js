@@ -11,8 +11,10 @@ shortUrlGenerateForm.addEventListener("submit", async (e) => {
   e.preventDefault();
   const inputUrl = e.currentTarget.querySelector("#url").value;
   try {
-    const data = await generateShortUrlId(inputUrl);
-    console.log(data);
+    const res = await generateShortUrlId(inputUrl);
+    if (res.success) {
+      await updateShortURLTable();
+    }
   } catch (error) {
     console.error(error.message);
   }
