@@ -1,8 +1,11 @@
 import shortid from "shortid";
 import { URLModel } from "../model/url.model.js";
+import { ApiResponse } from "../utils/ApiResponse.js";
+import { ApiError } from "../utils/ApiError.js";
 
 const createShortURL = async (req, res) => {
   try {
+    console.log(req.body);
     const redirectURL = req.body.url;
     const shortURLId = shortid();
     const urlDoc = await URLModel.create({
@@ -10,9 +13,58 @@ const createShortURL = async (req, res) => {
       redirectURL,
       clickHistory: [],
     });
-    res.status(201).json({ message: "url short successfully", urlDoc });
+    res.status(201).json(
+      new ApiResponse({
+        status: 201,
+        message: "url short successfully",
+        data: urlDoc,
+      })
+    );
   } catch (error) {
     console.log("unable to short url " + error.message);
+  }
+};
+
+const getAllShortUrlIds = async (req, res) => {
+  try {
+    const shortUrlIds = await URLModel.find();
+    res.status(200).json(
+      new ApiResponse({
+        status: 200,
+        message: "fetched all short url ids",
+        data: shortUrlIds,
+      })
+    );
+  } catch (error) {
+    throw new ApiError({
+      status: 500,
+      message: "cannot fetched short url ids",
+      // error: error,
+    });
+  }
+};
+
+const deleteShortURLId = async (req, res) => {
+  try {
+    const shortURLId = req.params.shortURLId;
+    const response = await URLModel.deleteOne({ shortURLId });
+    if (!response) {
+      throw new ApiError({
+        status: 400,
+        message: "Cannot delete this document",
+      });
+    }
+    res.status(200).json(
+      new ApiResponse({
+        status: 200,
+        message: "Document deleted successfully",
+      })
+    );
+  } catch (error) {
+    throw new ApiError({
+      status: 500,
+      message: error.message,
+    });
   }
 };
 
@@ -35,4 +87,38 @@ const redirectToMainURL = async (req, res) => {
   }
 };
 
-export { createShortURL, redirectToMainURL };
+const getShortUrlAnalytics = async (req, res) => {
+  try {
+    const shortURLId = req.params.shortURLId;
+    const shortURLDoc = await URLModel.findOne({
+      shortURLId,
+    });
+    if (!shortURLDoc) {
+      throw new ApiError({
+        status: 404,
+        message: "document not found",
+      });
+    }
+
+    res.status(200).json(
+      new ApiResponse({
+        status: 200,
+        message: "document found successfully",
+        data: shortURLDoc,
+      })
+    );
+  } catch (error) {
+    throw new ApiError({
+      status: 404,
+      message: error.message,
+    });
+  }
+};
+
+export {
+  createShortURL,
+  getAllShortUrlIds,
+  deleteShortURLId,
+  redirectToMainURL,
+  getShortUrlAnalytics,
+};
