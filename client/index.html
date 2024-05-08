@@ -1,0 +1,34 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>short url generator</title>
+  <script type="module" src="./main.js"></script>
+</head>
+
+<body>
+  <form action="/url" method="post">
+    <label for="url">URL</label>
+    <input type="url" name="url" id="url" placeholder="http://www.google.com">
+    <button type="submit" id="short-ur-generate-btn">generate short url</button>
+  </form>
+  <div id="result">
+    <!-- this is result area -->
+  </div>
+  <!-- all short url ids -->
+  <table>
+    <thead>
+      <th>s.no</th>
+      <th>short url</th>
+      <th>main url</th>
+      <th>total clicks</th>
+    </thead>
+    <tbody>
+      <!-- table row data will append dynamically -->
+    </tbody>
+  </table>
+</body>
+
+</html>
