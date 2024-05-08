@@ -13,15 +13,13 @@ const createShortURL = async (req, res) => {
       redirectURL,
       clickHistory: [],
     });
-    res
-      .status(201)
-      .json(
-        new ApiResponse({
-          status: 201,
-          message: "url short successfully",
-          data: urlDoc,
-        })
-      );
+    res.status(201).json(
+      new ApiResponse({
+        status: 201,
+        message: "url short successfully",
+        data: urlDoc,
+      })
+    );
   } catch (error) {
     console.log("unable to short url " + error.message);
   }
@@ -89,9 +87,38 @@ const redirectToMainURL = async (req, res) => {
   }
 };
 
+const getShortUrlAnalytics = async (req, res) => {
+  try {
+    const shortURLId = req.params.shortURLId;
+    const shortURLDoc = await URLModel.findOne({
+      shortURLId,
+    });
+    if (!shortURLDoc) {
+      throw new ApiError({
+        status: 404,
+        message: "document not found",
+      });
+    }
+
+    res.status(200).json(
+      new ApiResponse({
+        status: 200,
+        message: "document found successfully",
+        data: shortURLDoc,
+      })
+    );
+  } catch (error) {
+    throw new ApiError({
+      status: 404,
+      message: error.message,
+    });
+  }
+};
+
 export {
   createShortURL,
   getAllShortUrlIds,
   deleteShortURLId,
   redirectToMainURL,
+  getShortUrlAnalytics,
 };

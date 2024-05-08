@@ -24,6 +24,16 @@ const deleteShortURL = async (id) => {
   }
 };
 
+// update analytic modal
+const getShortURLAnalytics = async (id) => {
+  try {
+    const res = await fetch(`${BASE_URL}/analytics/${id}`)
+    return res.json()
+  } catch (error) {
+    console.error(error.message)
+  }
+}
+
 const generateShortUrlId = async (url) => {
   try {
     const response = await fetch(`${BASE_URL}/url`, {
@@ -41,4 +51,4 @@ const generateShortUrlId = async (url) => {
   }
 };
 
-export { generateShortUrlId, deleteShortURL, getAllShortUrlIds };
+export { generateShortUrlId, deleteShortURL, getAllShortUrlIds, getShortURLAnalytics };
