@@ -1,13 +1,28 @@
+import { updateShortURLTable } from "./main.js";
+
 const BASE_URL = "http://localhost:8000";
 
 const getAllShortUrlIds = async () => {
   try {
-    const response = await fetch(`${BASE_URL}/short-url-ids`)
-    return response.json()
+    const response = await fetch(`${BASE_URL}/short-url-ids`);
+    return response.json();
   } catch (error) {
-    console.error('cannot get all short url ids: ' + error.message)
+    console.error("cannot get all short url ids: " + error.message);
   }
-}
+};
+
+const deleteShortURL = async (id) => {
+  try {
+    const res = await fetch(`${BASE_URL}/delete/${id}`, {
+      method: "DELETE",
+    });
+    if (res.ok) {
+      await updateShortURLTable();
+    }
+  } catch (error) {
+    console.error(error.message);
+  }
+};
 
 const generateShortUrlId = async (url) => {
   try {
@@ -26,4 +41,4 @@ const generateShortUrlId = async (url) => {
   }
 };
 
-export { generateShortUrlId, getAllShortUrlIds };
+export { generateShortUrlId, deleteShortURL, getAllShortUrlIds };
