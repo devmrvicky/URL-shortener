@@ -33,10 +33,32 @@ const getAllShortUrlIds = async (req, res) => {
     throw new ApiError({
       status: 500,
       message: "cannot fetched short url ids",
-      error: error,
+      // error: error,
     });
   }
 };
+
+const deleteShortURLId = async (req, res) => {
+  try {
+    const shortURLId = req.params.shortURLId
+    const response = await URLModel.deleteOne({shortURLId})
+    if(!response) {
+      throw new ApiError({
+        status: 400,
+        message: 'Cannot delete this document'
+      })
+    }
+    res.status(200).json(new ApiResponse({
+      status: 200,
+      message: "Document deleted successfully"
+    }))
+  } catch (error) {
+    throw new ApiError({
+      status: 500,
+      message: error.message
+    })
+  }
+}
 
 const redirectToMainURL = async (req, res) => {
   try {
@@ -57,4 +79,4 @@ const redirectToMainURL = async (req, res) => {
   }
 };
 
-export { createShortURL, getAllShortUrlIds, redirectToMainURL };
+export { createShortURL, getAllShortUrlIds, deleteShortURLId, redirectToMainURL };
