@@ -5,10 +5,95 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>short url</title>
+  <!-- <script src="./views/script.js" defer type="module"></script> -->
 </head>
 
 <body>
-  this is from server ejs
+  <form action="/url/create" method="POST">
+    <label for="url">URL</label>
+    <input type="url" name="url" id="url" placeholder="http://www.google.com">
+    <button type="submit" id="short-ur-generate-btn">generate short url</button>
+  </form>
+  <div id="result">
+    <!-- this is result area -->
+  </div>
+  <!-- all short url ids -->
+  <table>
+    <thead>
+      <th>s.no</th>
+      <th>short url</th>
+      <th>main url</th>
+      <th>total clicks</th>
+      <th>actions</th>
+    </thead>
+    <tbody>
+      <!-- table row data will append dynamically -->
+      <% urls.map((doc, index)=> { %>
+        <tr>
+          <td>
+            <%= index + 1 %>
+          </td>
+          <td>
+            <a href="http://localhost:8000/url/<%= doc.shortURLId %>" target="_blank">http://localhost:8000/<%=
+                doc.shortURLId %></a>
+          </td>
+          <td>
+            <a href="<%= doc.redirectURL %>">
+              <%= doc.redirectURL %>
+            </a>
+          </td>
+          <td>
+            <%= doc.clickHistory.length %>
+          </td>
+          <td>
+            <button type="button" class="delete-short-url-id" data-id="<%= doc.shortURLId %>">delete</button>
+            <button type="button" class="view-analytic" data-id="<%= doc.shortURLId %>">view</button>
+          </td>
+        </tr>
+        <% }); %>
+    </tbody>
+  </table>
+  <!-- analytic modal -->
+  <dialog close>
+    <button type="button" id="close-dialog">close</button>
+    <div class="modal-content">
+      <!-- here will be append data dynamically -->
+      <details data-name="short-url">
+        <summary>
+          <h2>Short url</h2>
+        </summary>
+        <span>this is short url</span>
+      </details>
+      <details data-name="redirect-url">
+        <summary>
+          <h2>Redirect url</h2>
+        </summary>
+        <span>this is redirect url</span>
+      </details>
+      <details data-name="click-history">
+        <summary>
+          <h2>Click history</h2>
+        </summary>
+        <span>this is click history</span>
+      </details>
+    </div>
+  </dialog>
+
+  <script>
+    const BASE_URL = 'http://localhost:8000'
+    // get all delete btns
+    const allDeleteBtns = document.querySelectorAll(".delete-short-url-id");
+    allDeleteBtns.forEach((btn) => {
+      btn.addEventListener("click", async (e) => {
+        const id = e.currentTarget.dataset.id;
+        //  deleteShortURL(id);
+        const res = await fetch(`${BASE_URL}/url/delete/${id}`, {
+          method: 'DELETE'
+        })
+      });
+    });
+
+  </script>
 </body>
 
 </html>

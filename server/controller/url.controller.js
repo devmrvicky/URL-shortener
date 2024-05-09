@@ -3,6 +3,15 @@ import { URLModel } from "../model/url.model.js";
 import { ApiResponse } from "../utils/ApiResponse.js";
 import { ApiError } from "../utils/ApiError.js";
 
+const getHomePage = async (req, res) => {
+  try {
+    const allShortUrlIds = await URLModel.find();
+    res.render("home", {
+      urls: allShortUrlIds,
+    });
+  } catch (error) {}
+};
+
 const createShortURL = async (req, res) => {
   try {
     console.log(req.body);
@@ -13,13 +22,14 @@ const createShortURL = async (req, res) => {
       redirectURL,
       clickHistory: [],
     });
-    res.status(201).json(
-      new ApiResponse({
-        status: 201,
-        message: "url short successfully",
-        data: urlDoc,
-      })
-    );
+    await getHomePage(req, res);
+    // res.status(201).json(
+    //   new ApiResponse({
+    //     status: 201,
+    //     message: "url short successfully",
+    //     data: urlDoc,
+    //   })
+    // );
   } catch (error) {
     console.log("unable to short url " + error.message);
   }
@@ -28,16 +38,16 @@ const createShortURL = async (req, res) => {
 const getAllShortUrlIds = async (req, res) => {
   try {
     const shortUrlIds = await URLModel.find();
-    // res.status(200).json(
-    //   new ApiResponse({
-    //     status: 200,
-    //     message: "fetched all short url ids",
-    //     data: shortUrlIds,
-    //   })
-    // );
-    res.render("home", {
-      ids: shortUrlIds,
-    });
+    res.status(200).json(
+      new ApiResponse({
+        status: 200,
+        message: "fetched all short url ids",
+        data: shortUrlIds,
+      })
+    );
+    // res.render("home", {
+    //   ids: shortUrlIds,
+    // });
   } catch (error) {
     throw new ApiError({
       status: 500,
@@ -57,12 +67,14 @@ const deleteShortURLId = async (req, res) => {
         message: "Cannot delete this document",
       });
     }
-    res.status(200).json(
-      new ApiResponse({
-        status: 200,
-        message: "Document deleted successfully",
-      })
-    );
+    await getHomePage(req, res);
+    console.log("Document deleted successfully");
+    // res.status(200).json(
+    //   new ApiResponse({
+    //     status: 200,
+    //     message: "Document deleted successfully",
+    //   })
+    // );
   } catch (error) {
     throw new ApiError({
       status: 500,
@@ -124,4 +136,5 @@ export {
   deleteShortURLId,
   redirectToMainURL,
   getShortUrlAnalytics,
+  getHomePage,
 };
