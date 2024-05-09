@@ -14,7 +14,9 @@ app.get("/test", (req, res) => {
 
 // import router
 import { router as URLRouter } from "./routes/url.routes.js";
+import {router as homeRouter} from "./routes/static/home.routes.js"
 
-app.use("/", URLRouter);
+app.use("/url", URLRouter);
+app.use("/", homeRouter)
 
 export { app };

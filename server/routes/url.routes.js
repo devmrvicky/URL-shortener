@@ -9,7 +9,7 @@ import {
 
 const router = Router();
 
-router.route("/url").post(createShortURL);
+router.route("/create").post(createShortURL);
 router.route("/short-url-ids").get(getAllShortUrlIds);
 router.route("/delete/:shortURLId").delete(deleteShortURLId);
 router.route("/:shortURLId").get(redirectToMainURL);
