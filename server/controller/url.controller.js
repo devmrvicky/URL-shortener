@@ -28,13 +28,16 @@ const createShortURL = async (req, res) => {
 const getAllShortUrlIds = async (req, res) => {
   try {
     const shortUrlIds = await URLModel.find();
-    res.status(200).json(
-      new ApiResponse({
-        status: 200,
-        message: "fetched all short url ids",
-        data: shortUrlIds,
-      })
-    );
+    // res.status(200).json(
+    //   new ApiResponse({
+    //     status: 200,
+    //     message: "fetched all short url ids",
+    //     data: shortUrlIds,
+    //   })
+    // );
+    res.render("home", {
+      ids: shortUrlIds,
+    });
   } catch (error) {
     throw new ApiError({
       status: 500,
