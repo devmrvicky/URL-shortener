@@ -86,7 +86,8 @@
     allDeleteBtns.forEach((btn) => {
       btn.addEventListener("click", async (e) => {
         const id = e.currentTarget.dataset.id;
-        //  deleteShortURL(id);
+        const tr = e.currentTarget.closest('tr');
+        tr.remove()
         const res = await fetch(`${BASE_URL}/url/delete/${id}`, {
           method: 'DELETE'
         })

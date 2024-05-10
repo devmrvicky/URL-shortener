@@ -6,6 +6,7 @@ import { ApiError } from "../utils/ApiError.js";
 const getHomePage = async (req, res) => {
   try {
     const allShortUrlIds = await URLModel.find();
+    console.log(allShortUrlIds);
     res.render("home", {
       urls: allShortUrlIds,
     });
