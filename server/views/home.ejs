@@ -80,6 +80,14 @@
   </dialog>
 
   <script>
+    const analyticModal = document.querySelector("dialog");
+    const closeAnalyticModalBtn = document.querySelector("#close-dialog");
+    const analyticContentElem = document.querySelector(".modal-content");
+
+    closeAnalyticModalBtn.addEventListener('click', e => {
+      analyticModal.close()
+    })
+
     const BASE_URL = 'http://localhost:8000'
     // get all delete btns
     const allDeleteBtns = document.querySelectorAll(".delete-short-url-id");
@@ -91,6 +99,40 @@
         const res = await fetch(`${BASE_URL}/url/delete/${id}`, {
           method: 'DELETE'
         })
+      });
+    });
+
+    const updateAnalyticModal = async (id) => {
+      try {
+        const res = await fetch(`${BASE_URL}/url/analytics/${id}`);
+        const analyticData = await res.json()
+        if (!analyticData) throw new Error("cannot get analytic data");
+        const { shortURLId, redirectURL, clickHistory } = analyticData.data;
+        const modalDetailsElem = analyticContentElem.querySelectorAll("details");
+        modalDetailsElem.forEach((summary) => {
+          switch (summary.dataset.name) {
+            case "short-url":
+              summary.children[1].textContent = shortURLId;
+              break;
+            case "redirect-url":
+              summary.children[1].textContent = redirectURL;
+              break;
+            case "click-history":
+              summary.children[1].textContent = clickHistory.length;
+              break;
+          }
+        });
+      } catch (error) {
+        console.error(error.message);
+      }
+    };
+
+    const allOpenAnalyticModalBtns = document.querySelectorAll(".view-analytic");
+    allOpenAnalyticModalBtns.forEach((btn) => {
+      btn.addEventListener("click", (e) => {
+        const id = e.currentTarget.dataset.id;
+        analyticModal.showModal();
+        updateAnalyticModal(id);
       });
     });
 
