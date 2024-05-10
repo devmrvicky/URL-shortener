@@ -14,10 +14,12 @@ app.get("/test", (req, res) => {
 });
 
 // import router
+import { router as homeRouter } from "./routes/static/static.routes.js";
 import { router as URLRouter } from "./routes/url.routes.js";
-import { router as homeRouter } from "./routes/static/home.routes.js";
+import {router as userRouter} from './routes/user.routes.js'
 
-app.use("/url", URLRouter);
 app.use("/", homeRouter);
+app.use("/url", URLRouter);
+app.use("/auth", userRouter)
 
 export { app };

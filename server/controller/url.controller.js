@@ -9,6 +9,7 @@ const getHomePage = async (req, res) => {
     console.log(allShortUrlIds);
     res.render("home", {
       urls: allShortUrlIds,
+      user: null,
     });
   } catch (error) {}
 };

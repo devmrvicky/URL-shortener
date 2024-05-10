@@ -11,4 +11,10 @@ router.route("/about").get(async (req, res) => {
   } catch (error) {}
 });
 
+router.route("/signup").get(async (req, res) => {
+  res.render("signup", {
+    error: null,
+  });
+});
+
 export { router };

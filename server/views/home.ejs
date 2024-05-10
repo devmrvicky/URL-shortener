@@ -9,6 +9,9 @@
 </head>
 
 <body>
+  <% if (user) { %>
+   <p>Logged in user -> <%= user.name %></p>
+  <% } %>
   <form action="/url/create" method="POST">
     <label for="url">URL</label>
     <input type="url" name="url" id="url" placeholder="http://www.google.com">
